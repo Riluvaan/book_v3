@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activities - Book V3</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; }
+        header { background: #007bff; color: white; padding: 15px; text-align: center; }
+        nav { background: #e9ecef; padding: 10px; text-align: center; }
+        nav a { margin: 0 10px; text-decoration: none; color: #007bff; }
+        nav a:hover { text-decoration: underline; }
+        .content { padding: 20px; }
+        table { width: 100%; background: white; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+        form input, form select, form button { padding: 8px; margin: 5px 0; }
+        form button { background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        form button:hover { background: #0056b3; }
+        .flash { color: green; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Book V3 - Activities</h2>
+    </header>
+    <nav>
+        <a href="/">Dashboard</a> |
+        <a href="/departments">Departments</a> |
+        {% if session['role'] == 'admin' %}
+            <a href="/users">Users</a> |
+        {% endif %}
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <div class="content">
+        <h3>Add New Activity</h3>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash">{{ messages[0] }}</div>
+          {% endif %}
+        {% endwith %}
+        <form method="post">
+            <input type="text" name="description" placeholder="Description" required><br>
+            <select name="item_id" required>
+                <option value="">Select Item</option>
+                {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.name }} ({{ item.department.name }})</option>
+                {% endfor %}
+            </select><br>
+            <input type="number" name="quantity" placeholder="Quantity" required><br>
+            <button type="submit">Add Activity</button>
+        </form>
+
+        <h3>Recent Activities</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>User</th>
+                <th>Date</th>
+            </tr>
+            {% for activity in activities %}
+            <tr>
+                <td>{{ activity.id }}</td>
+                <td>{{ activity.description }}</td>
+                <td>{{ activity.item.name if activity.item else 'N/A' }}</td>
+                <td>{{ activity.quantity }}</td>
+                <td>{{ activity.user.username if activity.user else 'N/A' }}</td>
+                <td>{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
