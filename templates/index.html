@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Book V3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        nav {
+            background: #e9ecef;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Book V3 - Activity Dashboard</h2>
+    </header>
+    <nav>
+        <a href="/activities">Activities</a> |
+        <a href="/departments">Departments</a> |
+        {% if session['role'] == 'admin' %}
+            <a href="/users">Users</a> |
+        {% endif %}
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <div class="content">
+        <h3>Recent Activities</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>User</th>
+                <th>Date</th>
+            </tr>
+            {% for activity in activities %}
+            <tr>
+                <td>{{ activity.id }}</td>
+                <td>{{ activity.description }}</td>
+                <td>{{ activity.item.name if activity.item else 'N/A' }}</td>
+                <td>{{ activity.quantity }}</td>
+                <td>{{ activity.user.username if activity.user else 'N/A' }}</td>
+                <td>{{ activity.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
